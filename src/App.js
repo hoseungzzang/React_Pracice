@@ -11,6 +11,8 @@ function App() {
   let [modal, setModal] = useState(false);
   let [sliceTitle,setSliceTitle] = useState(0);
   let [addTitle,setAddTitle] = useState('');
+  const date = new Date();
+  
   const onIncrease = () => {
     changeTitle(['바뀐제목','2','3']);
   }
@@ -21,10 +23,15 @@ function App() {
   })
   let [count,plusCount] = useState(arr2);
 
-
   function plusC(index){
     let arr = [...count] ;
     arr[index] = count[index]+1;
+    plusCount(arr);
+  }
+
+  function addCount(){
+    let arr = [...count] ;
+    arr.unshift(0);
     plusCount(arr);
   }
 
@@ -42,8 +49,19 @@ function App() {
 
   function enterTitle(){
     let newArray = [...title] ;
-    newArray.push(addTitle);
+    newArray.unshift(addTitle);
+    addCount();
     changeTitle(newArray);
+  }
+
+  
+  function deleteTitle(index){
+    let newArray = [...title] ;
+    let newCount = [...count] ;
+    newCount.splice(index,1)
+    console.log(newCount);
+    plusCount(newCount);
+    changeTitle(newArray.filter(newArray=>newArray!==title[index]));
   }
 
   return (
@@ -54,13 +72,14 @@ function App() {
      </div>
 
      {
+      
       title.map(function(a,i){
         return (
           <div className ="list">
       <h3 onClick={()=>{modal==true?sliceTitle==i?setModal(false):'' :setModal(true);setSliceTitle(i) }}>{title[i]}</h3><span onClick={()=>{plusC(i)} }>★</span> {count[i]}
-      <p>2월 18일 발행</p>
+      <p>{date.getFullYear()}년 {date.getMonth()}월 {date.getDay()}일 {date.getSeconds()}</p>
 
-      <button onClick={onIncrease}>+1</button>
+      <button onClick={onIncrease}>+1</button> <button onClick={()=>{deleteTitle(i)}}>Delete</button>
       <hr/>
      </div>
         )
